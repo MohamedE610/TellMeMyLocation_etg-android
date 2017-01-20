@@ -7,37 +7,57 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.mohamedfawzy.etg_android.MainActivity">
+    tools:context="com.example.mohamedfawzy.etg.MainActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#d8a6a6"
-        android:layout_alignParentTop="true">
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView" >
 
-        <Button
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="What is this ?"
-            android:id="@+id/button_vision"
-            android:layout_marginTop="30dp"
-            android:background="#ffffff" />
+            android:layout_height="match_parent"
+            android:background="#d8a6a6"
+            android:layout_alignParentTop="true">
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Where am I !"
-            android:id="@+id/button_location"
-            android:layout_marginTop="30dp"
-            android:background="#ffffff" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="What is this ?"
+                android:id="@+id/button_vision"
+                android:layout_marginTop="30dp"
+                android:background="#ffffff" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="I am lost !"
-            android:id="@+id/button_lost"
-            android:layout_marginTop="30dp"
-            android:background="#ffffff" />
-    </LinearLayout>s
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Where am I !"
+                android:id="@+id/button_location"
+                android:layout_marginTop="30dp"
+                android:background="#ffffff" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="I am lost !"
+                android:id="@+id/button_lost"
+                android:layout_marginTop="30dp"
+                android:background="#ffffff" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text=""
+                android:id="@+id/detailsText1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text=""
+                android:id="@+id/detailsText2" />
+        </LinearLayout>
+    </ScrollView>s
 </RelativeLayout>

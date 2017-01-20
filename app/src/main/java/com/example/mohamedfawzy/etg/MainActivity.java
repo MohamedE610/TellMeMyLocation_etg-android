@@ -1,4 +1,4 @@
-package com.example.mohamedfawzy.etg_android;
+package com.example.mohamedfawzy.etg;
 
 import android.Manifest;
 import android.content.Intent;
@@ -12,9 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.m_fawzy.etg_android.Vision_Activity;
+import com.example.mohamedfawzy.etg_android.R;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
@@ -44,9 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int GALLERY_IMAGE_REQUEST = 1;
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
-    private String imgDetails1, imgDetails2;
-    private Bitmap image;
-    Intent visionIntent;
+
+    TextView detailsText1 , detailsText2;
     /*********************/
 
     @Override
@@ -54,18 +54,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        detailsText1 = (TextView) findViewById(R.id.detailsText1);
+        detailsText2 = (TextView) findViewById(R.id.detailsText2);
         final Button visionButton = (Button) findViewById(R.id.button_vision);
         visionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startCamera();            }
+                startCamera();
+
+                /** Sara **/
+                /** Deal with the strings in detailsText1 , detailsText1 **/
+            }
         });
-         visionIntent = new Intent(this, Vision_Activity.class);
 
         final Button locationButton = (Button) findViewById(R.id.button_location);
-        visionButton.setOnClickListener(new View.OnClickListener() {
+        locationButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 /*** Mohamed Mostafa ****/
+                /** You can use detailsText1 , detailsText2 TextViews to display your results **/
             }
         });
 
@@ -114,8 +120,7 @@ public class MainActivity extends AppCompatActivity {
         // Switch text to loading
 
         Toast.makeText(this, R.string.loading_message, Toast.LENGTH_LONG).show();
-        imgDetails1 = "Loading";
-        imgDetails2 = "";
+
         // Do the real work in an async task, because we need to use the network anyway
         new AsyncTask<Object, Void, String[]>() {
             @Override
@@ -186,13 +191,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
             protected void onPostExecute(String[] result) {
-                imgDetails1 = result[0];
-                imgDetails2 = result[1];
 
-                visionIntent.putExtra("imgDetails1", imgDetails1);
-                visionIntent.putExtra("imgDetails2", imgDetails2);
-                visionIntent.putExtra("image", image);
-                startActivity(visionIntent);
+                detailsText1.setText(result[0]);
+                detailsText2.setText(result[1]);
             }
         }.execute();
     }
@@ -206,7 +207,6 @@ public class MainActivity extends AppCompatActivity {
                                 MediaStore.Images.Media.getBitmap(getContentResolver(), uri),
                                 1200);
 
-                image = bitmap;
                 callCloudVision(bitmap);
 
 

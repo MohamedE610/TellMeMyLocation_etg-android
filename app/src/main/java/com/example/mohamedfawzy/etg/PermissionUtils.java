@@ -1,4 +1,4 @@
-package com.example.mohamedfawzy.etg_android;
+package com.example.mohamedfawzy.etg;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
