@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
 
+    String storesResults[];  // to store the results in case of being lost
     TextView detailsText1 , detailsText2;
     /*********************/
 
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        storesResults = new String[2];
         detailsText1 = (TextView) findViewById(R.id.detailsText1);
         detailsText2 = (TextView) findViewById(R.id.detailsText2);
         final Button visionButton = (Button) findViewById(R.id.button_vision);
@@ -120,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         // Switch text to loading
 
         Toast.makeText(this, R.string.loading_message, Toast.LENGTH_LONG).show();
-
+        detailsText1.setText("Loading...Please wait!");
         // Do the real work in an async task, because we need to use the network anyway
         new AsyncTask<Object, Void, String[]>() {
             @Override
@@ -192,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
 
             protected void onPostExecute(String[] result) {
 
+                storesResults = result;
                 detailsText1.setText(result[0]);
                 detailsText2.setText(result[1]);
             }
