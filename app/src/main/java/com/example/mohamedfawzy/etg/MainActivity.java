@@ -1,6 +1,8 @@
 package com.example.mohamedfawzy.etg;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -9,6 +11,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
+import android.support.multidex.MultiDex;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +20,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mohamedfawzy.etg.Utils.LocationOperations;
+import com.example.mohamedfawzy.etg.Utils.LocationResponse;
 import com.example.mohamedfawzy.etg_android.R;
+import com.google.android.gms.location.places.Place;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
@@ -38,7 +45,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity  implements
+
+public class MainActivity extends FragmentActivity implements
         TextToSpeech.OnInitListener {
 
     /******* Fawzy  *******/
@@ -51,7 +59,17 @@ public class MainActivity extends AppCompatActivity  implements
 
     String storesResults[];  // to store the results in case of being lost
     TextView detailsText1 , detailsText2;
+// 3bd el3al
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
+        MultiDex.install(this);
+    }
+
     /*********************/
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +99,19 @@ public class MainActivity extends AppCompatActivity  implements
 
                 /*** Mohamed Mostafa ****/
                 /** You can use detailsText1 , detailsText2 TextViews to display your results **/
+                LocationOperations locationOperations=new LocationOperations(MainActivity.this);
+                locationOperations.execute();
+                locationOperations.setOnLocationResponse(new LocationResponse() {
+                    @Override
+                    public void onLoctionDetected(Place currentPlace) {
+                        String s,ss;
+                        s=currentPlace.getName().toString();
+                        ss=currentPlace.getAddress().toString();
+                        detailsText1.setText(s);
+                        detailsText1.setText(ss);
+
+                    }
+                });
             }
         });
 

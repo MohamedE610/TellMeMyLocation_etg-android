@@ -22,7 +22,7 @@ public class LocationOperations extends AsyncTask<Void,Void,Void> implements Goo
     private Place currentPlace;
     private LocationResponse locationResponse;
 
-    public LocationOperations(Activity activity  ){
+    public LocationOperations(FragmentActivity activity  ){
 
         connectionSetUp(activity);
     }
@@ -41,7 +41,7 @@ public class LocationOperations extends AsyncTask<Void,Void,Void> implements Goo
     protected Void doInBackground(Void... params) {
 
         getCurrentPlace();
-
+        int i;
         return null;
     }
 
@@ -49,7 +49,8 @@ public class LocationOperations extends AsyncTask<Void,Void,Void> implements Goo
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        locationResponse.onLoctionDetected(currentPlace);
+
+        //locationResponse.onLoctionDetected(currentPlace);
 
         endConnection();
     }
@@ -59,9 +60,9 @@ public class LocationOperations extends AsyncTask<Void,Void,Void> implements Goo
 
     }
 
-    private void connectionSetUp(Activity activity){
+    private void connectionSetUp(FragmentActivity   activity){
         googleApiClient=new GoogleApiClient.Builder(activity).addApi(Places.PLACE_DETECTION_API)
-                .addApi(Places.GEO_DATA_API).enableAutoManage((FragmentActivity)activity,this).build();
+                .addApi(Places.GEO_DATA_API).enableAutoManage(activity,this).build();
     }
 
     private void startConnection(){
@@ -82,6 +83,7 @@ public class LocationOperations extends AsyncTask<Void,Void,Void> implements Goo
             public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
 
                 currentPlace=placeLikelihoods.get(0).getPlace();
+                locationResponse.onLoctionDetected(currentPlace);
 
             }
         });
