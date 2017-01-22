@@ -33,4 +33,10 @@ dependencies {
     compile 'com.google.http-client:google-http-client-gson:1.20.0' exclude module: 'httpclient'
 
     compile 'com.google.apis:google-api-services-vision:v1-rev2-1.21.0'
+
+    /* 3bd el3al
+    google-play-services
+     */
+    compile 'com.google.android.gms:play-services:9.2.1'
+
 }

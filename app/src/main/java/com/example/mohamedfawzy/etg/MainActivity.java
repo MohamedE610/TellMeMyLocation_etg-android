@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -35,8 +36,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  implements
+        TextToSpeech.OnInitListener {
 
     /******* Fawzy  *******/
     private static final String CLOUD_VISION_API_KEY = " AIzaSyAVKpfKs3ogNhlFBvUA41CL2QVpkBIUcrg";
@@ -54,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /*********** sara code  ***************/
+        textToSpeech = new TextToSpeech(this, this);
+/*********** sara code  ***************/
 
         storesResults = new String[2];
         detailsText1 = (TextView) findViewById(R.id.detailsText1);
@@ -272,6 +279,48 @@ public class MainActivity extends AppCompatActivity {
         return messages;
     }
 //
-
     /************************************************************/
+
+    /*************** sarah code *****************/
+    private TextToSpeech textToSpeech;
+
+    @Override
+    public void onInit(int status) {
+
+
+        if (status == TextToSpeech.SUCCESS)
+        {
+            Toast.makeText(MainActivity.this,
+                    "Text-To-Speech engine is initialized", Toast.LENGTH_LONG).show();
+
+            int  result = textToSpeech.setLanguage(Locale.ENGLISH);
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_MISSING_DATA)
+
+            {
+                Log.e("TTS", "This Language is not supported");
+            }
+            else
+            {
+
+                Log.e("TTS","Initialization success");
+                //speakOut("Hello");
+
+            }
+
+        } else if(status==TextToSpeech.ERROR)
+        {
+            Log.e("TTS","Initialization failed");
+            Toast.makeText(MainActivity.this,
+                    "Error occurred while initializing Text-To-Speech engine", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    private void speakOut(String text)
+    {
+
+        textToSpeech.speak(text,TextToSpeech.QUEUE_FLUSH,null );
+
+    }
+/*************** sarah code *****************/
 }
