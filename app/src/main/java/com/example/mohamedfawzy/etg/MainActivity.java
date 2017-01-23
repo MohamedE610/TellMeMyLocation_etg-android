@@ -59,14 +59,17 @@ public class MainActivity extends FragmentActivity implements
 
     String storesResults[];  // to store the results in case of being lost
     TextView detailsText1 , detailsText2;
-// 3bd el3al
+    /*********** 3bd el3al  ***************/
+    LocationOperations locationOperations;
+    Button btn;
+    /*********** 3bd el3al  ***************/
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(newBase);
         MultiDex.install(this);
     }
 
-    /*********************/
+    /*********** 3bd el3al  ***************/
 
 
 
@@ -78,7 +81,7 @@ public class MainActivity extends FragmentActivity implements
 
         /*********** sara code  ***************/
         textToSpeech = new TextToSpeech(this, this);
-/*********** sara code  ***************/
+       /*********** sara code  ***************/
 
         storesResults = new String[2];
         detailsText1 = (TextView) findViewById(R.id.detailsText1);
@@ -90,8 +93,12 @@ public class MainActivity extends FragmentActivity implements
 
                 /** Sara **/
                 /** Deal with the strings in detailsText1 , detailsText1 **/
+
+                speakOut(detailsText1.getText().toString());
             }
         });
+
+        locationOperations=new LocationOperations(MainActivity.this);
 
         final Button locationButton = (Button) findViewById(R.id.button_location);
         locationButton.setOnClickListener(new View.OnClickListener() {
@@ -99,8 +106,8 @@ public class MainActivity extends FragmentActivity implements
 
                 /*** Mohamed Mostafa ****/
                 /** You can use detailsText1 , detailsText2 TextViews to display your results **/
-                LocationOperations locationOperations=new LocationOperations(MainActivity.this);
-                locationOperations.execute();
+
+                locationOperations.getCurrentPlace();
                 locationOperations.setOnLocationResponse(new LocationResponse() {
                     @Override
                     public void onLoctionDetected(Place currentPlace) {
@@ -108,10 +115,21 @@ public class MainActivity extends FragmentActivity implements
                         s=currentPlace.getName().toString();
                         ss=currentPlace.getAddress().toString();
                         detailsText1.setText(s);
-                        detailsText1.setText(ss);
+                        detailsText2.setText(ss);
+
+                        speakOut(s);
+                        //speakOut(ss);
 
                     }
                 });
+            }
+        });
+
+        btn =(Button)findViewById(R.id.button_lost);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speakOut("Hello");
             }
         });
 
@@ -325,7 +343,7 @@ public class MainActivity extends FragmentActivity implements
                     "Text-To-Speech engine is initialized", Toast.LENGTH_LONG).show();
 
             int  result = textToSpeech.setLanguage(Locale.ENGLISH);
-            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_MISSING_DATA)
+            if ( result == TextToSpeech.LANG_NOT_SUPPORTED||result == TextToSpeech.LANG_MISSING_DATA)
 
             {
                 Log.e("TTS", "This Language is not supported");
@@ -334,6 +352,7 @@ public class MainActivity extends FragmentActivity implements
             {
 
                 Log.e("TTS","Initialization success");
+                //btn.setEnabled(true);
                 //speakOut("Hello");
 
             }
@@ -347,11 +366,21 @@ public class MainActivity extends FragmentActivity implements
 
     }
 
-    private void speakOut(String text)
+    public void speakOut(String text)
     {
 
         textToSpeech.speak(text,TextToSpeech.QUEUE_FLUSH,null );
 
+    }
+
+    @Override
+    public void onDestroy() {
+        // Don't forget to shutdown tts!
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onDestroy();
     }
 /*************** sarah code *****************/
 }

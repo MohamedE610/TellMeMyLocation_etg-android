@@ -2,7 +2,9 @@ package com.example.mohamedfawzy.etg.Utils;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -16,9 +18,20 @@ import com.google.android.gms.location.places.Places;
 /**
  * Created by E610 on 22/01/2017.
  */
-public class LocationOperations extends AsyncTask<Void,Void,Void> implements GoogleApiClient.OnConnectionFailedListener{
+public class LocationOperations  implements GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks {
 
     private GoogleApiClient googleApiClient;
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
     private Place currentPlace;
     private LocationResponse locationResponse;
 
@@ -27,33 +40,11 @@ public class LocationOperations extends AsyncTask<Void,Void,Void> implements Goo
         connectionSetUp(activity);
     }
 
-    public void setOnLocationResponse(LocationResponse lr){
-        locationResponse=lr;
+    public void setOnLocationResponse(LocationResponse locationResponse){
+
+        this.locationResponse=locationResponse;
     }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        startConnection();
-    }
-
-    @Override
-    protected Void doInBackground(Void... params) {
-
-        getCurrentPlace();
-        int i;
-        return null;
-    }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-
-
-        //locationResponse.onLoctionDetected(currentPlace);
-
-        endConnection();
-    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -62,29 +53,22 @@ public class LocationOperations extends AsyncTask<Void,Void,Void> implements Goo
 
     private void connectionSetUp(FragmentActivity   activity){
         googleApiClient=new GoogleApiClient.Builder(activity).addApi(Places.PLACE_DETECTION_API)
-                .addApi(Places.GEO_DATA_API).enableAutoManage(activity,this).build();
+                .addApi(Places.GEO_DATA_API).addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this).enableAutoManage(activity,this).build();
     }
 
-    private void startConnection(){
-        if(googleApiClient!=null)
-            googleApiClient.connect();
-    }
-
-    private void endConnection(){
-        if(googleApiClient!=null)
-            googleApiClient.disconnect();
-    }
-
-    private void getCurrentPlace(){
+    public void getCurrentPlace(){
 
         PendingResult<PlaceLikelihoodBuffer> result=Places.PlaceDetectionApi.getCurrentPlace(googleApiClient,null);
         result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
             @Override
             public void onResult(@NonNull PlaceLikelihoodBuffer placeLikelihoods) {
 
-                currentPlace=placeLikelihoods.get(0).getPlace();
-                locationResponse.onLoctionDetected(currentPlace);
-
+                if(placeLikelihoods.getStatus().isSuccess() && placeLikelihoods.getCount()>0) {
+                    currentPlace = placeLikelihoods.get(1).getPlace();
+                    locationResponse.onLoctionDetected(currentPlace);
+                    //endConnection();
+                }
             }
         });
     }
