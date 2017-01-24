@@ -62,6 +62,11 @@ public class MainActivity extends FragmentActivity implements
     /*********** 3bd el3al  ***************/
     LocationOperations locationOperations;
     Button btn;
+
+    boolean checkLostOrVision;
+    /* if visionButton is clicked checkLostOrVision will be false
+     else if lostButton is clicked checkLostOrVision will be true */
+
     /*********** 3bd el3al  ***************/
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -91,10 +96,11 @@ public class MainActivity extends FragmentActivity implements
             public void onClick(View v) {
                 startCamera();
 
+                checkLostOrVision=false;
                 /** Sara **/
                 /** Deal with the strings in detailsText1 , detailsText1 **/
 
-                speakOut(detailsText1.getText().toString());
+               // speakOut(detailsText1.getText().toString());
             }
         });
 
@@ -118,7 +124,7 @@ public class MainActivity extends FragmentActivity implements
                         detailsText2.setText(ss);
 
                         speakOut(s);
-                        //speakOut(ss);
+                        speakOut(ss);
 
                     }
                 });
@@ -129,7 +135,29 @@ public class MainActivity extends FragmentActivity implements
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speakOut("Hello");
+
+
+                /************* Vision *************/
+
+                startCamera();
+                checkLostOrVision=true;
+
+                /************** Location **************//*
+                locationOperations.getCurrentPlace();
+                locationOperations.setOnLocationResponse(new LocationResponse() {
+                    @Override
+                    public void onLoctionDetected(Place currentPlace) {
+                        String s,ss;
+                        s=currentPlace.getName().toString();
+                        ss=currentPlace.getAddress().toString();
+                        detailsText1.setText(s);
+                        detailsText2.setText(ss);
+
+                        speakOut(s);
+                        speakOut(ss);
+
+                    }
+                });*/
             }
         });
 
@@ -253,6 +281,38 @@ public class MainActivity extends FragmentActivity implements
                 storesResults = result;
                 detailsText1.setText(result[0]);
                 detailsText2.setText(result[1]);
+
+                /*********************** Speaking ***********************/
+              //  speakOut(result[0]);
+                //speakOut(result[1]);
+                final String s1=result[0];
+                final String s2=result[1];
+                //speakOut(s1+s2);
+                // check which button is clicked visionButton or lostButton
+          if(checkLostOrVision) {
+              /************** Location **************/
+              locationOperations.getCurrentPlace();
+              locationOperations.setOnLocationResponse(new LocationResponse() {
+                  @Override
+                  public void onLoctionDetected(Place currentPlace) {
+                      // Sarah Idea
+                      String s, ss,sss;
+                      s =  s1+" "+s2;
+                      ss = currentPlace.getName().toString()+" "+currentPlace.getAddress().toString();
+                      detailsText1.setText(s);
+                      detailsText2.setText(ss);
+
+                     sss=s+" "+ss;
+                     // speakOut(s);
+                      speakOut(sss);
+                      //speakOut(s1);
+                      //speakOut(s2);
+
+                  }
+              });
+
+
+          }
             }
         }.execute();
     }
@@ -342,7 +402,7 @@ public class MainActivity extends FragmentActivity implements
             Toast.makeText(MainActivity.this,
                     "Text-To-Speech engine is initialized", Toast.LENGTH_LONG).show();
 
-            int  result = textToSpeech.setLanguage(Locale.ENGLISH);
+            int  result = textToSpeech.setLanguage(Locale.UK);
             if ( result == TextToSpeech.LANG_NOT_SUPPORTED||result == TextToSpeech.LANG_MISSING_DATA)
 
             {
