@@ -1,6 +1,8 @@
 package com.example.mohamedfawzy.etg;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -8,6 +10,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.speech.tts.TextToSpeech;
+import android.support.multidex.MultiDex;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -15,7 +20,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.mohamedfawzy.etg.Utils.LocationOperations;
+import com.example.mohamedfawzy.etg.Utils.LocationResponse;
 import com.example.mohamedfawzy.etg_android.R;
+import com.google.android.gms.location.places.Place;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
@@ -35,8 +43,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends FragmentActivity implements
+        TextToSpeech.OnInitListener {
 
     /******* Fawzy  *******/
     private static final String CLOUD_VISION_API_KEY = " AIzaSyAVKpfKs3ogNhlFBvUA41CL2QVpkBIUcrg";
@@ -48,12 +59,34 @@ public class MainActivity extends AppCompatActivity {
 
     String storesResults[];  // to store the results in case of being lost
     TextView detailsText1 , detailsText2;
-    /*********************/
+    /*********** 3bd el3al  ***************/
+    LocationOperations locationOperations;
+    Button btn;
+
+    boolean checkLostOrVision;
+    /* if visionButton is clicked checkLostOrVision will be false
+     else if lostButton is clicked checkLostOrVision will be true */
+
+    /*********** 3bd el3al  ***************/
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
+        MultiDex.install(this);
+    }
+
+    /*********** 3bd el3al  ***************/
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /*********** sara code  ***************/
+        textToSpeech = new TextToSpeech(this, this);
+       /*********** sara code  ***************/
 
         storesResults = new String[2];
         detailsText1 = (TextView) findViewById(R.id.detailsText1);
@@ -63,10 +96,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 startCamera();
 
+                checkLostOrVision=false;
                 /** Sara **/
                 /** Deal with the strings in detailsText1 , detailsText1 **/
+
+               // speakOut(detailsText1.getText().toString());
             }
         });
+
+        locationOperations=new LocationOperations(MainActivity.this);
 
         final Button locationButton = (Button) findViewById(R.id.button_location);
         locationButton.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +112,52 @@ public class MainActivity extends AppCompatActivity {
 
                 /*** Mohamed Mostafa ****/
                 /** You can use detailsText1 , detailsText2 TextViews to display your results **/
+
+                locationOperations.getCurrentPlace();
+                locationOperations.setOnLocationResponse(new LocationResponse() {
+                    @Override
+                    public void onLoctionDetected(Place currentPlace) {
+                        String s,ss;
+                        s=currentPlace.getName().toString();
+                        ss=currentPlace.getAddress().toString();
+                        detailsText1.setText(s);
+                        detailsText2.setText(ss);
+
+                        speakOut(s);
+                        speakOut(ss);
+
+                    }
+                });
+            }
+        });
+
+        btn =(Button)findViewById(R.id.button_lost);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                /************* Vision *************/
+
+                startCamera();
+                checkLostOrVision=true;
+
+                /************** Location **************//*
+                locationOperations.getCurrentPlace();
+                locationOperations.setOnLocationResponse(new LocationResponse() {
+                    @Override
+                    public void onLoctionDetected(Place currentPlace) {
+                        String s,ss;
+                        s=currentPlace.getName().toString();
+                        ss=currentPlace.getAddress().toString();
+                        detailsText1.setText(s);
+                        detailsText2.setText(ss);
+
+                        speakOut(s);
+                        speakOut(ss);
+
+                    }
+                });*/
             }
         });
 
@@ -197,6 +281,38 @@ public class MainActivity extends AppCompatActivity {
                 storesResults = result;
                 detailsText1.setText(result[0]);
                 detailsText2.setText(result[1]);
+
+                /*********************** Speaking ***********************/
+              //  speakOut(result[0]);
+                //speakOut(result[1]);
+                final String s1=result[0];
+                final String s2=result[1];
+                //speakOut(s1+s2);
+                // check which button is clicked visionButton or lostButton
+          if(checkLostOrVision) {
+              /************** Location **************/
+              locationOperations.getCurrentPlace();
+              locationOperations.setOnLocationResponse(new LocationResponse() {
+                  @Override
+                  public void onLoctionDetected(Place currentPlace) {
+                      // Sarah Idea
+                      String s, ss,sss;
+                      s =  s1+" "+s2;
+                      ss = currentPlace.getName().toString()+" "+currentPlace.getAddress().toString();
+                      detailsText1.setText(s);
+                      detailsText2.setText(ss);
+
+                     sss=s+" "+ss;
+                     // speakOut(s);
+                      speakOut(sss);
+                      //speakOut(s1);
+                      //speakOut(s2);
+
+                  }
+              });
+
+
+          }
             }
         }.execute();
     }
@@ -272,6 +388,59 @@ public class MainActivity extends AppCompatActivity {
         return messages;
     }
 //
-
     /************************************************************/
+
+    /*************** sarah code *****************/
+    private TextToSpeech textToSpeech;
+
+    @Override
+    public void onInit(int status) {
+
+
+        if (status == TextToSpeech.SUCCESS)
+        {
+            Toast.makeText(MainActivity.this,
+                    "Text-To-Speech engine is initialized", Toast.LENGTH_LONG).show();
+
+            int  result = textToSpeech.setLanguage(Locale.UK);
+            if ( result == TextToSpeech.LANG_NOT_SUPPORTED||result == TextToSpeech.LANG_MISSING_DATA)
+
+            {
+                Log.e("TTS", "This Language is not supported");
+            }
+            else
+            {
+
+                Log.e("TTS","Initialization success");
+                //btn.setEnabled(true);
+                //speakOut("Hello");
+
+            }
+
+        } else if(status==TextToSpeech.ERROR)
+        {
+            Log.e("TTS","Initialization failed");
+            Toast.makeText(MainActivity.this,
+                    "Error occurred while initializing Text-To-Speech engine", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    public void speakOut(String text)
+    {
+
+        textToSpeech.speak(text,TextToSpeech.QUEUE_FLUSH,null );
+
+    }
+
+    @Override
+    public void onDestroy() {
+        // Don't forget to shutdown tts!
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onDestroy();
+    }
+/*************** sarah code *****************/
 }

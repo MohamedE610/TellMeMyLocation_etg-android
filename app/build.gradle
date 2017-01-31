@@ -10,6 +10,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        /* 3bd el3al */
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -33,4 +36,13 @@ dependencies {
     compile 'com.google.http-client:google-http-client-gson:1.20.0' exclude module: 'httpclient'
 
     compile 'com.google.apis:google-api-services-vision:v1-rev2-1.21.0'
+
+    /* 3bd el3al
+    google-play-services
+     */
+    //compile 'com.google.android.gms:play-services:9.2.1'
+    compile 'com.google.android.gms:play-services-places:10.0.1'
+    compile 'com.android.support:multidex:1.0.1'
+
+
 }
