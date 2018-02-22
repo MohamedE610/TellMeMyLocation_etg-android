@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -117,15 +119,17 @@ public class MainActivity extends FragmentActivity implements
                 locationOperations.setOnLocationResponse(new LocationResponse() {
                     @Override
                     public void onLoctionDetected(Place currentPlace) {
-                        String s,ss;
-                        s=currentPlace.getName().toString();
-                        ss=currentPlace.getAddress().toString();
-                        detailsText1.setText(s);
-                        detailsText2.setText(ss);
 
-                        speakOut(s);
-                        speakOut(ss);
+                        try {
+                            String s, ss;
+                            s = currentPlace.getName().toString();
+                            ss = currentPlace.getAddress().toString();
+                            detailsText1.setText(s);
+                            detailsText2.setText(ss);
 
+                            speakOut(s);
+                            speakOut(ss);
+                        }catch (Exception e){}
                     }
                 });
             }
