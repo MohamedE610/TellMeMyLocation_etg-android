@@ -1,4 +1,4 @@
-package com.example.mohamedfawzy.etg.Utils;
+package com.example.mohamedfawzy.etg.LocationUtils;
 
 import com.google.android.gms.location.places.Place;
 

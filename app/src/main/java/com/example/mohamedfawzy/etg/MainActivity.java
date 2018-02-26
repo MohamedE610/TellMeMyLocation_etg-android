@@ -22,8 +22,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mohamedfawzy.etg.Utils.LocationOperations;
-import com.example.mohamedfawzy.etg.Utils.LocationResponse;
+import com.example.mohamedfawzy.etg.LocationUtils.LocationOperations;
+import com.example.mohamedfawzy.etg.LocationUtils.LocationResponse;
 import com.example.mohamedfawzy.etg_android.R;
 import com.google.android.gms.location.places.Place;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class MainActivity extends FragmentActivity implements
+public class MainActivity extends AppCompatActivity implements
         TextToSpeech.OnInitListener {
 
     /******* Fawzy  *******/

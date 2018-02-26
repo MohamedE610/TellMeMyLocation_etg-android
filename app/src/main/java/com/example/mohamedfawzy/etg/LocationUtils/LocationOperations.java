@@ -1,4 +1,4 @@
-package com.example.mohamedfawzy.etg.Utils;
+package com.example.mohamedfawzy.etg.LocationUtils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -59,6 +59,11 @@ public class LocationOperations implements GoogleApiClient.OnConnectionFailedLis
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+
+
+    /********************    using enableAutoManage() in fragment   ************************/
+/********************  stackoverflow.com/questions/30622906/using-enableautomanage-in-fragment  ************************/
 
     private void connectionSetUp(FragmentActivity activity) {
         googleApiClient = new GoogleApiClient.Builder(activity).addApi(Places.PLACE_DETECTION_API)

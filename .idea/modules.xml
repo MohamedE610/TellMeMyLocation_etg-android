@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/TellMeMyLocation_etg-android.iml" filepath="$PROJECT_DIR$/TellMeMyLocation_etg-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://E:\Android Projects\TellMeMyLocation_etg-android\app\app.iml" filepath="E:\Android Projects\TellMeMyLocation_etg-android\app\app.iml" />
       <module fileurl="file://E:\Android Projects\etg-android\app\app.iml" filepath="E:\Android Projects\etg-android\app\app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/etg-android.iml" filepath="$PROJECT_DIR$/etg-android.iml" />
-      <module fileurl="file://E:\Android Projects\etg-android\etg-android.iml" filepath="E:\Android Projects\etg-android\etg-android.iml" />
+      <module fileurl="file://E:\Android Projects\TellMeMyLocation_etg-android\etg-android.iml" filepath="E:\Android Projects\TellMeMyLocation_etg-android\etg-android.iml" />
     </modules>
   </component>
 </project>
